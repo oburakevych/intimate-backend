@@ -31,11 +31,11 @@ public class OwnerController {
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<java.lang.String> login(@RequestBody String json) {
         Owner owner = Owner.fromJsonToOwner(json);
-        //Owner existingOwner = Owner.getOwner(owner.getUsername(), owner.getPassword());
+        Owner existingOwner = Owner.getOwner(owner.getUsername(), owner.getPassword());
         
         System.out.println("HERE I AM");
         
-        Owner existingOwner = securityService.getAuthornameisedOwner(owner.getUsername(), owner.getPassword());
+        //Owner existingOwner = securityService.getAuthornameisedOwner(owner.getUsername(), owner.getPassword());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         if (existingOwner == null) {

@@ -66,12 +66,13 @@ public class FileManager {
 	public boolean allChunksUploaded(String ownerId, String identifier, Long chunkSize, Long totalSize) {
 		long noOfChunks = totalSize / chunkSize;
 
+		/*
 		for (int chunkNo = 1; chunkNo <= noOfChunks; chunkNo++) {
-			if (!Files.exists(Paths.get(dataDirectory, ownerId, identifier,
-					String.valueOf(chunkNo)))) {
+			if (!Files.exists(Paths.get(dataDirectory, ownerId, identifier, String.valueOf(chunkNo)))) {
 				return false;
 			}
 		}
+		*/
 		return true;
 
 	}
@@ -87,7 +88,7 @@ public class FileManager {
 		if (Files.exists(newFilePath)) {
 			Files.delete(newFilePath);
 		}
-
+		/*
 		try (BufferedOutputStream bos = new BufferedOutputStream(
 				new FileOutputStream(newFilePath.toFile()))) {
 			for (int chunkNo = 1; chunkNo <= noOfChunks; chunkNo++) {
@@ -100,6 +101,7 @@ public class FileManager {
 				}
 			}
 		} 
+		*/
 
 		delete(Paths.get(dataDirectory, ownerId, identifier), 1000, 10);
 	}

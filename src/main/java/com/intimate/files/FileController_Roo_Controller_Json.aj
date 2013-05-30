@@ -5,7 +5,6 @@ package com.intimate.files;
 
 import com.intimate.files.File;
 import com.intimate.files.FileController;
-import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

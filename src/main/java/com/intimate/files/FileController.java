@@ -61,13 +61,14 @@ public class FileController {
 			@RequestParam(value = "resumableFilename") final String fileName,
 			@RequestParam(value = "file") final MultipartFile file)
 			throws IOException {
-
+		
 		if (!fileManager.isSupported(fileName)) {
 			// cancel the whole upload
 			response.setStatus(501);
 			return;
 		}
 
+		/*
 		try (InputStream is = file.getInputStream()) {
 			fileManager.storeChunk(ownerId, identifier, chunkNumber, is);
 		} catch (Exception e) {
@@ -79,6 +80,7 @@ public class FileController {
 		if (fileManager.allChunksUploaded(ownerId, identifier, chunkSize, totalSize)) {
 			fileManager.mergeAndDeleteChunks(ownerId, fileName, identifier, chunkSize, totalSize);
 		}
+		*/
 
 		response.setStatus(200);
 	}
