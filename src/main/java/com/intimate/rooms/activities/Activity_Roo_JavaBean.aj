@@ -4,7 +4,9 @@
 package com.intimate.rooms.activities;
 
 import com.intimate.rooms.activities.Activity;
+import com.intimate.rooms.activities.ActivityStatus;
 import com.intimate.rooms.activities.ActivityType;
+import com.intimate.rooms.activities.contents.Content;
 import java.util.Date;
 
 privileged aspect Activity_Roo_JavaBean {
@@ -39,6 +41,30 @@ privileged aspect Activity_Roo_JavaBean {
     
     public void Activity.setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+    
+    public Date Activity.getSyncDate() {
+        return this.syncDate;
+    }
+    
+    public void Activity.setSyncDate(Date syncDate) {
+        this.syncDate = syncDate;
+    }
+    
+    public ActivityStatus Activity.getStatus() {
+        return this.status;
+    }
+    
+    public void Activity.setStatus(ActivityStatus status) {
+        this.status = status;
+    }
+    
+    public Content Activity.getContent() {
+        return this.content;
+    }
+    
+    public void Activity.setContent(Content content) {
+        this.content = content;
     }
     
 }

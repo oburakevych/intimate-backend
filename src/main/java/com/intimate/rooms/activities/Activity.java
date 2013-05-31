@@ -1,9 +1,15 @@
 package com.intimate.rooms.activities;
 
+import com.intimate.rooms.activities.contents.Content;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +32,18 @@ public class Activity {
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(style = "M-")
-    private Date created = new Date();
+    private Date created;
 
     private String ownerId;
+
+    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(style = "M-")
+    private Date syncDate = new Date();
+
+    @Enumerated
+    private ActivityStatus status;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Content content;
 }
