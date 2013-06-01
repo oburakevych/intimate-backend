@@ -6,7 +6,7 @@ package com.intimate.rooms;
 import com.intimate.owners.groups.RoomOwnerGroup;
 import com.intimate.rooms.Room;
 import com.intimate.rooms.activities.Activity;
-import java.util.Set;
+import java.util.List;
 
 privileged aspect Room_Roo_JavaBean {
     
@@ -42,11 +42,11 @@ privileged aspect Room_Roo_JavaBean {
         this.ownerGroup = ownerGroup;
     }
     
-    public Set<Activity> Room.getActivities() {
+    public List<Activity> Room.getActivities() {
         return this.activities;
     }
     
-    public void Room.setActivities(Set<Activity> activities) {
+    public void Room.setActivities(List<Activity> activities) {
         this.activities = activities;
     }
     

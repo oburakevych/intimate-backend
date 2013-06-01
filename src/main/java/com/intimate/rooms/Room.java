@@ -4,8 +4,11 @@ import com.intimate.owners.groups.RoomOwnerGroup;
 import com.intimate.rooms.activities.Activity;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -41,7 +44,7 @@ public class Room {
     private RoomOwnerGroup ownerGroup;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Activity> activities = new HashSet<Activity>();
+    private List<Activity> activities = new ArrayList<Activity>();
 
     public String toJson() {
         return new JSONSerializer().exclude("*.class").include("ownerGroup", "activities").deepSerialize(this);
