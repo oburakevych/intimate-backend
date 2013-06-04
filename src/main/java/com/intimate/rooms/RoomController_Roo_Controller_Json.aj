@@ -17,18 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect RoomController_Roo_Controller_Json {
     
-    @RequestMapping(value = "/{id}", headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<String> RoomController.showJson(@PathVariable("id") String id) {
-        Room room = Room.findRoom(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
-        if (room == null) {
-            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<String>(room.toJson(), headers, HttpStatus.OK);
-    }
-    
     @RequestMapping(headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> RoomController.listJson() {

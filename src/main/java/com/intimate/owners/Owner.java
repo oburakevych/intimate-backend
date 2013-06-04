@@ -50,8 +50,6 @@ public class Owner {
     public static com.intimate.owners.Owner getOwner(String username) {
         if (username == null || username.length() == 0) throw new IllegalArgumentException("The username argument is required");
         Owner owner = findOwnerByUsername(username.toLowerCase()).getSingleResult();
-        //owner.setPassword(null);
-        //owner.setEmail(null);
         return owner;
     }
 

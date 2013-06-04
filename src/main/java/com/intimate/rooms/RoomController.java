@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.NoResultException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,19 +41,23 @@ public class RoomController {
     	
     	log.debug("Creating a new room for {}", username);
     	
-    	Owner existingOwner = Owner.getOwner(username, password);
+    	Owner authorisedOwner = null;
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         
-    	if (existingOwner == null) {
-    		return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);	
-    	}
+    	try {
+    		authorisedOwner = Owner.getOwner(username, password);
+		} catch (NoResultException e) {
+			log.error("User {} with password {} cannot be authenticated");
+			
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);	
+		}
 
-    	Membership ownerMembership = Membership.getMembershipByOwnerId(existingOwner.getId());
+    	Membership ownerMembership = Membership.getMembershipByOwnerId(authorisedOwner.getId());
     	
     	if (ownerMembership == null) {
-    		ownerMembership = new Membership(UUID.randomUUID().toString(), existingOwner.getId());
+    		ownerMembership = new Membership(UUID.randomUUID().toString(), authorisedOwner.getId());
     		ownerMembership.persist();
     	}
     	
@@ -90,6 +96,45 @@ public class RoomController {
         return new ResponseEntity<String>(room.toJson(), headers, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "{roomCode}", headers = "Accept=application/json")
+    public ResponseEntity<String> showJson(
+    		@RequestParam("username") String username,
+    		@RequestParam("password") String password,
+    		@PathVariable("roomCode") String roomCode) {
+    	
+    	log.debug("Opening room for {} with room code {}", username, roomCode);
+    	
+    	Owner authorisedOwner = null;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        
+    	try {
+    		authorisedOwner = Owner.getOwner(username, password);
+		} catch (NoResultException e) {
+			log.error("User {} with password {} cannot be authenticated");
+			
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);	
+		}
+    	
+    	Room room = null;  
+    	try {
+			room = Room.getRoomForCode(authorisedOwner.getId(), roomCode);
+		} catch (NoResultException e) {
+			log.error("Invalid code {}", roomCode);
+			return new ResponseEntity<String>("Invalid room code", headers, HttpStatus.NOT_FOUND);	
+		}
+        
+    	if (room == null) {
+    		log.error("User {} is not a member of the room with code {}", authorisedOwner.getId(), roomCode);
+    		return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
+    	}
+    	
+        log.debug("Returning: \n{}", room.toJson());
+
+        return new ResponseEntity<String>(room.toJson(), headers, HttpStatus.OK);
+    }
+
     
     @RequestMapping(value="{roomId}/activities", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createActivityFromJson(
@@ -98,6 +143,19 @@ public class RoomController {
     		@PathVariable("roomId") String roomId,
     		@RequestBody String json) {
     	log.debug("Request to create new activity for room {}", roomId);
+    	
+    	Owner authorisedOwner = null;
+    	
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        
+    	try {
+    		authorisedOwner = Owner.getOwner(username, password);
+		} catch (NoResultException e) {
+			log.error("User {} with password {} cannot be authenticated", username, password);
+			
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);	
+		}
     	
     	Activity activity = Activity.fromJsonToActivity(json);
     	
@@ -111,10 +169,20 @@ public class RoomController {
     		}
     	}
     	
-    	activity.persist();
+    	Room room = Room.findRoom(roomId);
     	
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
+    	if (room == null) {
+			log.error("Room {} does not exists", roomId);
+			
+			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);    		
+    	}
+    	
+    	log.debug("Found {} activities in the room {}", room.getActivities().size(), roomId);
+    	
+    	room.getActivities().add(activity);
+    	
+    	//activity.persist();
+    	room.merge();
     	
     	return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
