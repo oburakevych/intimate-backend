@@ -24,20 +24,28 @@ privileged aspect Content_Roo_JavaBean {
         this.created = created;
     }
     
-    public String Content.getBody() {
-        return this.body;
+    public String Content.getText() {
+        return this.text;
     }
     
-    public void Content.setBody(String body) {
-        this.body = body;
+    public void Content.setText(String text) {
+        this.text = text;
     }
     
-    public String Content.getDescription() {
-        return this.description;
+    public String Content.getOriginalLocation() {
+        return this.originalLocation;
     }
     
-    public void Content.setDescription(String description) {
-        this.description = description;
+    public void Content.setOriginalLocation(String originalLocation) {
+        this.originalLocation = originalLocation;
+    }
+    
+    public String Content.getRemoteLocation() {
+        return this.remoteLocation;
+    }
+    
+    public void Content.setRemoteLocation(String remoteLocation) {
+        this.remoteLocation = remoteLocation;
     }
     
 }

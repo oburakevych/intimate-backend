@@ -29,7 +29,9 @@ public class Content {
     private Date created = new Date();
 
     @Size(max = 1024)
-    private String body;
-
-    private String description;
+    private String text;
+    @Size(max = 1024)
+    private String originalLocation;
+    @Size(max = 1024)
+    private String remoteLocation;
 }
